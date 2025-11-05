@@ -13,14 +13,14 @@ export default function Home() {
   // Hero slides data
   const heroSlides = [
     {
-      image: 'https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=1920&q=80',
+      image: '/images/hero1.jpg',
       title: 'We help the HIV infected kids realise their dream of leading a normal life.',
       description: 'The foundation works relentlessly to identify, rescue and provide shelter, nutrition, medicine and education to the kids suffering from HIV/AIDS'
     },
     {
-      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=1920&q=80',
+      image: '/images/hero2.jpg',
       title: 'Building Hope, One Child at a Time',
-      description: 'Join us in our mission to provide love, care, and support to children affected by HIV/AIDS, helping them build a brighter future.'
+      description: 'Join us in your mission to provide love, care, and support to children affected by HIV/AIDS, helping them build a brighter future.'
     }
   ]
 
@@ -249,9 +249,9 @@ export default function Home() {
               <div className="animate-slide-up delay-200 relative">
                 <div className="relative neon-edge-card rounded-2xl overflow-hidden">
                   <img
-                    src="https://via.placeholder.com/600x400"
+                    src="/images/hero3.jpg"
                     alt="AIDS Care Team"
-                    className="w-full h-auto rounded-2xl shadow-2xl"
+                    className="w-full h-auto rounded-2xl shadow-2xl object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[rgba(132,88,255,0.3)] to-transparent rounded-2xl"></div>
                 </div>
@@ -264,79 +264,153 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Programs Section - Neon Frame Cards */}
-        <section id="programs" className="py-20 sm:py-24 lg:py-32 bg-gradient-to-br from-[rgba(10,12,16,0.02)] to-[#FAFAFF]">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16 lg:mb-20 animate-fade-in">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0B0D12] mb-6">
-                Our Programs
+        {/* Programs Section - Futuristic Dark Theme */}
+        <section id="programs" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-900 to-gray-800 relative overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-1/2 -left-1/4 w-[800px] h-[800px] bg-blue-500/5 rounded-full mix-blend-soft-light blur-3xl animate-float-slow"></div>
+            <div className="absolute -bottom-1/4 -right-1/4 w-[1000px] h-[1000px] bg-purple-500/5 rounded-full mix-blend-soft-light blur-3xl animate-float-slower"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[600px] bg-gradient-to-r from-blue-500/5 via-transparent to-purple-500/5 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16 lg:mb-20">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 mb-4">
+                Our <span className="text-white">Programs</span>
               </h2>
-              <p className="text-lg sm:text-xl text-[#0B0D12]/70 max-w-3xl mx-auto">
+              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
                 Comprehensive care programs designed to support individuals and families affected by HIV/AIDS
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+            <style jsx>{`
+              @keyframes float-slow {
+                0%, 100% { transform: translateY(0) translateX(0); }
+                50% { transform: translateY(-20px) translateX(10px); }
+              }
+              @keyframes float-slower {
+                0%, 100% { transform: translateY(0) translateX(0); }
+                50% { transform: translateY(10px) translateX(-10px); }
+              }
+              @keyframes pulse-glow {
+                0%, 100% { box-shadow: 0 0 5px 0px rgba(99, 102, 241, 0.3), 0 0 15px 0px rgba(99, 102, 241, 0.2); }
+                50% { box-shadow: 0 0 20px 2px rgba(99, 102, 241, 0.4), 0 0 30px 5px rgba(99, 102, 241, 0.3); }
+              }
+              .animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+              .animate-float-slower { animation: float-slower 15s ease-in-out infinite; }
+              .animate-pulse-glow { animation: pulse-glow 5s ease-in-out infinite; }
+              .card-hover-effect { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+              .card-hover-effect:hover { transform: translateY(-5px) scale(1.01); }
+            `}</style>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 {
                   title: "Medical Care",
                   description: "Comprehensive medical services including antiretroviral therapy, regular health check-ups, and specialized HIV care.",
                   icon: FaHeartbeat,
                   features: ["ART Therapy", "Regular Monitoring", "Specialist Consultations"],
-                  color: "#FF7CE5"
+                  gradient: "from-blue-500 to-purple-600"
                 },
                 {
                   title: "Counseling & Support",
                   description: "Professional counseling services for individuals and families dealing with HIV/AIDS.",
                   icon: FaUserMd,
                   features: ["Individual Counseling", "Family Support", "Group Therapy"],
-                  color: "#2ED8C3"
+                  gradient: "from-emerald-500 to-cyan-600"
                 },
                 {
                   title: "Education & Awareness",
                   description: "Educational programs to raise awareness and prevent the spread of HIV.",
                   icon: FaGraduationCap,
                   features: ["Community Workshops", "School Programs", "Prevention Education"],
-                  color: "#8458FF"
+                  gradient: "from-violet-500 to-fuchsia-600"
                 },
                 {
                   title: "Nutrition Support",
                   description: "Nutritional counseling and support to maintain health and strengthen immune system.",
                   icon: FaAppleAlt,
                   features: ["Nutritional Planning", "Supplement Programs", "Dietary Counseling"],
-                  color: "#FF7CE5"
+                  gradient: "from-amber-500 to-pink-600"
                 },
                 {
                   title: "Community Outreach",
                   description: "Community-based programs to support and empower those affected by HIV/AIDS.",
                   icon: FaUsers,
                   features: ["Support Groups", "Home Visits", "Community Events"],
-                  color: "#2ED8C3"
+                  gradient: "from-rose-500 to-pink-600"
                 },
                 {
                   title: "Youth Programs",
                   description: "Specialized programs for children and adolescents living with HIV.",
                   icon: FaChild,
                   features: ["Educational Support", "Recreational Activities", "Peer Support"],
-                  color: "#8458FF"
+                  gradient: "from-indigo-500 to-blue-600"
                 }
               ].map((program, index) => (
-                <div key={index} className="neon-edge-card rounded-2xl p-8 group hover:scale-105 transition-all duration-500 animate-slide-up" style={{ animationDelay: `${index * 150}ms` }}>
-                  <div className="mb-6">
-                    <div className="w-16 h-16 rounded-2xl bg-[rgba(255,255,255,0.8)] backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-lg">
-                      <program.icon className="text-3xl" style={{ color: program.color }} />
+                <div 
+                  key={index}
+                  className="group relative bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 p-6 overflow-hidden card-hover-effect hover:border-blue-400/30 transition-all duration-500"
+                >
+                  {/* Animated border effect */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${program.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+                  
+                  <div className="relative z-10">
+                    <div 
+                      className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-all duration-500"
+                      style={{
+                        background: `linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(124, 58, 237, 0.1))`,
+                        boxShadow: '0 0 10px rgba(99, 102, 241, 0.1)'
+                      }}
+                    >
+                      <program.icon className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-500">
+                      {program.title}
+                    </h3>
+                    
+                    <p className="text-gray-300 mb-5 leading-relaxed">
+                      {program.description}
+                    </p>
+                    
+                    <ul className="space-y-2.5 mb-6">
+                      {program.features.map((feature, featureIndex) => (
+                        <li 
+                          key={featureIndex}
+                          className="flex items-center text-gray-300 group-hover:text-white transition-all duration-300 group-hover:translate-x-1"
+                        >
+                          <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-3 group-hover:scale-125 transition-transform duration-300"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <div className="relative
+                      before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/0 before:via-blue-500/40 before:to-transparent 
+                      before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-500
+                      after:absolute after:inset-0 after:bg-gradient-to-r after:from-blue-500/0 after:via-blue-500/20 after:to-transparent
+                      after:opacity-0 group-hover:after:opacity-100 after:transition-opacity after:duration-700 after:delay-100
+                    ">
+                      <button className="relative z-10 text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg flex items-center group-hover:scale-105 transition-all duration-300">
+                        Learn more
+                        <svg 
+                          className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24" 
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth="2" 
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          ></path>
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#0B0D12] mb-4 group-hover:text-[#8458FF] transition-colors duration-300">{program.title}</h3>
-                  <p className="text-[#0B0D12]/70 mb-6 leading-relaxed">{program.description}</p>
-                  <ul className="space-y-3">
-                    {program.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-[#0B0D12]/80">
-                        <span className="w-2 h-2 rounded-full mr-4" style={{ backgroundColor: program.color }}></span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               ))}
             </div>
