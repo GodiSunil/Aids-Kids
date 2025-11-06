@@ -19,7 +19,7 @@ export default function AboutPage() {
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=1920&q=80')`,
+              backgroundImage: `url('/images/background.jpg')`,
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary-dark via-primary-dark/70 to-primary-dark/50"></div>
@@ -71,8 +71,8 @@ export default function AboutPage() {
               <div className="animate-slide-in-right">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
                   <img 
-                    src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=800&q=80" 
-                    alt="Children at Ravi Teja Childrens Home smiling together" 
+                    src="/images/about1.jpg" 
+                    alt="Children at Ravi Teja Childrens Home" 
                     className="w-full h-auto object-cover rounded-2xl"
                   />
                 </div>
@@ -102,8 +102,8 @@ export default function AboutPage() {
               <div className="lg:order-1 animate-slide-in-right">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-300">
                   <img 
-                    src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80" 
-                    alt="Two children hugging and smiling at Ravi Teja Childrens Home" 
+                    src="/images/about2.jpg" 
+                    alt="Children at Ravi Teja Childrens Home activities" 
                     className="w-full h-auto object-cover rounded-2xl"
                   />
                 </div>

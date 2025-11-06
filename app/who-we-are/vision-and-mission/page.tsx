@@ -19,7 +19,7 @@ export default function VisionAndMissionPage() {
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1920&q=80')`,
+              backgroundImage: `url('/images/missionback.jpg')`,
             }}
           >
             <div className="absolute inset-0 bg-black/40"></div>

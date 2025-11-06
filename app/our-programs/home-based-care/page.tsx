@@ -1,247 +1,572 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { FaHome, FaHeart, FaShoppingBag, FaUtensils, FaGraduationCap, FaComments, FaHandHoldingHeart } from 'react-icons/fa'
+import { useState, useEffect, useRef } from 'react';
+import { motion, useInView, useAnimation, AnimatePresence, Variants } from 'framer-motion';
+import { 
+  FaHome, FaHeart, FaShoppingBag, FaUtensils, FaGraduationCap, 
+  FaComments, FaHandHoldingHeart, FaArrowRight, FaHeartbeat, 
+  FaHandsHelping, FaClipboardList, FaClipboardCheck, FaTasks,
+  FaChevronDown
+} from 'react-icons/fa';
+import { FiHome, FiHeart, FiShield, FiUsers, FiBook, FiMessageSquare } from 'react-icons/fi';
 
-export default function HomeBasedCarePage() {
-  const [isVisible, setIsVisible] = useState(false)
+const variants: Record<string, Variants> = {
+  fadeInUp: {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: [0.16, 1, 0.3, 1] as any,
+      },
+    },
+  },
+  staggerContainer: {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  },
+};
+
+interface ServiceCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  index: number;
+}
+
+const ServiceCard = ({ icon, title, description, index }: ServiceCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <motion.div
+      className="group relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all duration-300 h-full flex flex-col"
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, delay: 0.1 * index }}
+    >
+      <AnimatePresence>
+        {isHovered && (
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-teal-500/20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          />
+        )}
+      </AnimatePresence>
+      
+      <div className="relative z-10 p-8 h-full flex flex-col">
+        <motion.div 
+          className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center text-2xl text-white bg-gradient-to-br from-blue-500 to-teal-500 shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+        >
+          {icon}
+        </motion.div>
+        <h3 className="text-2xl font-bold text-white mb-3">
+          {title}
+        </h3>
+        <p className="text-gray-200 flex-grow">
+          {description}
+        </p>
+        <div className="mt-6 pt-4 border-t border-white/20">
+          <span className="inline-flex items-center text-sm font-medium text-blue-300 group-hover:text-white transition-colors duration-300">
+            Learn more
+            <FaArrowRight className="ml-2 transition-transform group-hover:translate-x-1 duration-300" />
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const HomeBasedCarePage = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.1 });
 
   useEffect(() => {
-    setIsVisible(true)
-  }, [])
+    if (isInView) {
+      controls.start('visible');
+      setIsVisible(true);
+    }
+  }, [isInView, controls]);
 
   const supportServices = [
     {
-      icon: <FaUtensils className="text-3xl" />,
+      icon: <FaUtensils />,
       title: 'Nutrition Support',
-      description: 'Providing essential nutrition to ensure children receive adequate food for healthy growth and development.'
+      description: 'Providing balanced meals and nutritional supplements to ensure proper growth and development for children.'
     },
     {
-      icon: <FaShoppingBag className="text-3xl" />,
-      title: 'Clothes',
-      description: 'Supplying clothing to meet basic needs and ensure children have appropriate attire for all seasons.'
+      icon: <FaShoppingBag />,
+      title: 'Clothing & Essentials',
+      description: 'Supplying quality clothing, footwear, and personal care items for all seasons and needs.'
     },
     {
-      icon: <FaHome className="text-3xl" />,
-      title: 'Blankets',
-      description: 'Providing warm blankets to protect children from cold weather and ensure comfort during sleep.'
+      icon: <FiHome />,
+      title: 'Home Comforts',
+      description: 'Providing blankets, bedding, and other home essentials to ensure a comfortable living environment.'
     },
     {
-      icon: <FaGraduationCap className="text-3xl" />,
+      icon: <FaGraduationCap />,
       title: 'Education Support',
-      description: 'Supporting children\'s education through school supplies, fees, and educational resources.'
+      description: 'Covering school fees, supplies, uniforms, and educational resources to support academic success.'
     },
     {
-      icon: <FaComments className="text-3xl" />,
-      title: 'Constant Counseling',
-      description: 'Regular counseling sessions for both guardians and children to provide emotional and psychological support.'
+      icon: <FiMessageSquare />,
+      title: 'Counseling Services',
+      description: 'Professional counseling for children and families to address emotional and psychological needs.'
+    },
+    {
+      icon: <FaHeartbeat />,
+      title: 'Healthcare Access',
+      description: 'Facilitating medical check-ups, medications, and healthcare services for overall well-being.'
     }
-  ]
+  ];
 
   return (
-    <div className="min-h-screen bg-white">
-
-      <main>
-        {/* Hero Section */}
-        <section className="relative h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden">
-          {/* Background Image */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900">
+      {/* Hero Section */}
+      <section className="relative h-screen min-h-[600px] overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1529390079861-591de354faf5?w=1920&q=80')`,
+              backgroundImage: `url('/images/homebased.jpg')`,
             }}
           >
-            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-900/80 via-blue-900/60 to-blue-900/80"></div>
           </div>
+          
+          {/* Animated particles */}
+          <div className="absolute inset-0 opacity-30">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full bg-white"
+                style={{
+                  width: Math.random() * 3 + 1 + 'px',
+                  height: Math.random() * 3 + 1 + 'px',
+                  left: Math.random() * 100 + '%',
+                  top: Math.random() * 100 + '%',
+                }}
+                animate={{
+                  x: [0, (Math.random() - 0.5) * 20],
+                  y: [0, (Math.random() - 0.5) * 20],
+                  opacity: [0.3, 0.8, 0.3],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 4,
+                  repeat: Infinity,
+                  repeatType: 'reverse' as const,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
+          <motion.div 
+            className="text-center text-white max-w-5xl"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="inline-block px-4 py-2 mb-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+            >
+              <span className="text-sm font-medium text-white/90">Comprehensive Care Initiative</span>
+            </motion.div>
+            
+            <motion.h1 
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">
+                Home Based Care
+              </span>
+              <br />
+              <span className="text-white">for Vulnerable Children</span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-gray-200 mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Providing essential support and care for children in need, right in the comfort of their homes
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="flex flex-col sm:flex-row justify-center gap-4"
+            >
+              <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                Learn More
+                <FaArrowRight className="text-sm" />
+              </button>
+              <button className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20">
+                Support Our Cause
+              </button>
+            </motion.div>
+          </motion.div>
+        </div>
+        
+        <motion.div 
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+        >
+          <FaChevronDown className="text-2xl" />
+        </motion.div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-gradient-to-br from-blue-700 to-teal-700 text-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+            variants={variants.staggerContainer}
+            initial="hidden"
+            animate={controls}
+            ref={ref}
+          >
+            {[
+              { icon: <FiHeart className="text-4xl mb-4" />, number: "500+", label: "Children Supported" },
+              { icon: <FiHome className="text-4xl mb-4" />, number: "15+", label: "Years of Service" },
+              { icon: <FiUsers className="text-4xl mb-4" />, number: "1000+", label: "Families Helped" },
+              { icon: <FiBook className="text-4xl mb-4" />, number: "85%", label: "School Attendance" },
+            ].map((stat, index) => (
+              <motion.div 
+                key={index}
+                className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-colors"
+                variants={variants.fadeInUp}
+                transition={{ delay: 0.2 + index * 0.1 }}
+              >
+                {stat.icon}
+                <motion.h3 
+                  className="text-3xl md:text-4xl font-bold mb-2"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                >
+                  {stat.number}
+                </motion.h3>
+                <motion.p 
+                  className="text-blue-100"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                >
+                  {stat.label}
+                </motion.p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <main className="relative z-10">
+        {/* Services Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/30 to-blue-900/10">
 
           {/* Content */}
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-center">
-            <div className={`text-center text-white ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 animate-slide-up px-4">
-                Home Based Care Support to Few HIV/AIDS Infected Families
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl mx-auto leading-relaxed animate-slide-up delay-200 px-4">
-                Extending care, compassion, and essentials to families in need.
-              </p>
+            <motion.div 
+              className="text-center text-white max-w-5xl"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="inline-block px-4 py-2 mb-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+              >
+                <span className="text-sm font-medium text-white/90">Comprehensive Care Initiative</span>
+              </motion.div>
+              
+              <motion.h1 
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">
+                  Home Based Care
+                </span>
+                <br />
+                <span className="text-white">for Vulnerable Children</span>
+              </motion.h1>
+              
+              <motion.p 
+                className="text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-gray-200 mb-10"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Providing essential support and care for children in need, right in the comfort of their homes
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="flex flex-col sm:flex-row justify-center gap-4"
+              >
+                <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                  Learn More
+                  <FaArrowRight className="text-sm" />
+                </button>
+                <button className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20">
+                  Support Our Cause
+                </button>
+              </motion.div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-blue-900/30 to-blue-900/10">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-center mb-16"
+            >
+              <motion.h2 
+                className="text-4xl md:text-5xl font-bold text-white mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">Support Services</span>
+              </motion.h2>
+              <motion.p 
+                className="text-xl text-gray-300 max-w-3xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Comprehensive care and support for children in need, ensuring their well-being and development.
+              </motion.p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {supportServices.map((service, index) => (
+                <ServiceCard
+                  key={index}
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.description}
+                  index={index}
+                />
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Main Content */}
-        <div className="max-w-6xl mx-auto py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 lg:space-y-20">
-          
-          {/* Section 1: Overview */}
-          <section className="animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center">
-              {/* Left Column - Text */}
-              <div className="animate-slide-in-left">
-                <div className="mb-6">
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                    Overview
-                  </h2>
-                  <div className="w-20 h-1 bg-primary-teal"></div>
-                </div>
-                <div className="space-y-4">
-                  <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                    In addition to the <strong>50 children housed in our charitable home</strong>, Ravi Teja Children&apos;s Home 
-                    extends its compassionate care through the <strong>&quot;Amma Amrutha Hastham&quot;</strong> service. This 
-                    program reaches out to <strong>50 more HIV/AIDS-infected children</strong> in the surrounding vicinity who 
-                    are financially backward and require basic needs.
-                  </p>
-                  <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                    Unlike the children living in our home, these children receive <strong>home-based care support</strong> 
-                    without residing at the facility. This approach allows us to help families stay together while ensuring 
-                    children receive the essential care, support, and resources they need to thrive.
-                  </p>
-                  <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                    Our home-based care program recognizes that every family&apos;s situation is unique, and we work closely 
-                    with guardians to provide tailored support that addresses their specific needs and challenges.
-                  </p>
-                </div>
-              </div>
+        {/* How It Works Section */}
+        <section className="py-20 bg-gradient-to-b from-blue-900/10 to-blue-900/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-center mb-16"
+            >
+              <motion.h2 
+                className="text-4xl md:text-5xl font-bold text-white mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                How It <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">Works</span>
+              </motion.h2>
+              <motion.p 
+                className="text-xl text-gray-300 max-w-3xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Our step-by-step process to ensure every child receives the care and support they need.
+              </motion.p>
+            </motion.div>
 
-              {/* Right Column - Image */}
-              <div className="animate-slide-in-right">
-                <div className="relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
-                  <img 
-                    src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&q=80" 
-                    alt="Children receiving home-based care support" 
-                    className="w-full h-auto object-cover rounded-xl"
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 2: Support Provided */}
-          <section className="animate-fade-in">
-            <div className="mb-8">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 border-l-4 border-primary-teal pl-4 mb-6">
-                Support Provided Under This Program
-              </h2>
-              <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-8">
-                Through our home-based care program, we provide comprehensive support to ensure children and their families 
-                have access to essential resources and services:
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {supportServices.map((service, index) => (
-                <div 
-                  key={index}
-                  className="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 animate-slide-up"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="text-primary-teal mb-4 flex justify-center">
-                    {service.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">
-                    {service.title}
-                  </h3>
-                  <p className="text-base text-gray-700 leading-relaxed text-center">
-                    {service.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Additional Support List */}
-            <div className="mt-12 bg-white rounded-xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6 text-center">
-                Additional Support Services
-              </h3>
-              <ul className="space-y-3 text-base sm:text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-teal font-bold text-xl mt-1">✓</span>
-                  <span>Regular health check-ups and medical referrals</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-teal font-bold text-xl mt-1">✓</span>
-                  <span>Assistance with accessing government schemes and benefits</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-teal font-bold text-xl mt-1">✓</span>
-                  <span>Support for guardians in managing children&apos;s health conditions</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-primary-teal font-bold text-xl mt-1">✓</span>
-                  <span>Regular home visits to assess needs and provide ongoing support</span>
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* Section 3: Program Operation & Impact */}
-          <section className="bg-gray-50 py-12 sm:py-16 rounded-xl shadow-sm animate-fade-in">
-            <div className="max-w-4xl mx-auto px-6 sm:px-8">
-              <div className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <FaHandHoldingHeart className="text-primary-teal text-3xl" />
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900 border-l-4 border-primary-teal pl-4">
-                    Program Operation & Impact
-                  </h2>
-                </div>
-              </div>
+            <div className="relative">
+              <div className="hidden md:block absolute top-0 left-1/2 h-full w-0.5 bg-gradient-to-b from-blue-500/30 to-teal-500/30 transform -translate-x-1/2"></div>
               
-              <div className="space-y-6">
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                  We conduct this program <strong>every second Saturday of the month</strong>, bringing together children, 
-                  families, and our support team for distribution of essential items, health check-ups, and counseling sessions. 
-                  This regular schedule ensures consistent support and builds trust with the families we serve.
-                </p>
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed">
-                  Beyond the regular monthly program, we have gone a step ahead multiple times to provide additional support 
-                  when families face critical needs. With the help of our generous donors, we have:
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                  <div className="bg-white rounded-lg p-6 shadow-md">
-                    <FaHome className="text-primary-teal text-3xl mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">House Construction Support</h3>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Helped HIV-infected families with house construction, providing safe and secure housing for children 
-                      and their guardians.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-6 shadow-md">
-                    <FaHandHoldingHeart className="text-primary-teal text-3xl mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">Livelihood Support</h3>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Provided weaving machines and other livelihood tools to help families become self-sufficient and 
-                      generate income for their children&apos;s needs.
-                    </p>
-                  </div>
-                  
-                  <div className="bg-white rounded-lg p-6 shadow-md md:col-span-2">
-                    <FaHeart className="text-primary-teal text-3xl mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">Medical Support</h3>
-                    <p className="text-base text-gray-700 leading-relaxed">
-                      Ensured access to medical care, treatments, and health monitoring, helping families manage health 
-                      conditions effectively and prevent complications.
-                    </p>
-                  </div>
-                </div>
+              <div className="space-y-16">
+                {[
+                  {
+                    number: '01',
+                    title: 'Initial Assessment',
+                    description: 'We conduct a thorough assessment of the child\'s needs and family situation.',
+                    icon: <FaClipboardList />
+                  },
+                  {
+                    number: '02',
+                    title: 'Personalized Care Plan',
+                    description: 'A customized care plan is created based on the assessment results.',
+                    icon: <FaClipboardCheck />
+                  },
+                  {
+                    number: '03',
+                    title: 'Implementation',
+                    description: 'Our team implements the care plan, providing all necessary support and resources.',
+                    icon: <FaTasks />
+                  },
+                  {
+                    number: '04',
+                    title: 'Ongoing Support',
+                    description: 'We provide continuous support and regular check-ins to ensure progress.',
+                    icon: <FaHandsHelping />
+                  }
+                ].map((step, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="relative group"
+                  >
+                    <div className="flex flex-col md:flex-row items-center">
+                      <div className={`flex-shrink-0 w-24 h-24 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 group-hover:border-blue-400/50 transition-colors flex items-center justify-center mb-6 md:mb-0 md:mx-8 relative z-10`}>
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                          {step.number}
+                        </div>
+                      </div>
+                      <div className="flex-1 p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 group-hover:border-blue-400/30 transition-colors">
+                        <div className="flex items-center mb-4">
+                          <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 text-blue-300 mr-4">
+                            {step.icon}
+                          </div>
+                          <h3 className="text-2xl font-bold text-white">{step.title}</h3>
+                        </div>
+                        <p className="text-gray-300 pl-16">{step.description}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
-          </section>
+          </div>
+        </section>
 
-          {/* Impact Highlight Section */}
-          <section className="bg-gradient-to-r from-primary-teal/10 to-primary-cyan/10 rounded-2xl p-8 sm:p-10 lg:p-12 border border-primary-teal/20 animate-fade-in">
-            <div className="max-w-4xl mx-auto text-center">
-              <FaHeart className="text-primary-teal text-4xl sm:text-5xl mx-auto mb-6" />
-              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                Making a Lasting Impact
-              </h3>
-              <p className="text-base sm:text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-                Our home-based care program extends our reach beyond the walls of our home, touching the lives of families 
-                in their own communities. By providing essential support, resources, and guidance, we help families maintain 
-                their dignity while ensuring children receive the care they need to grow, learn, and thrive.
-              </p>
+        {/* CTA Section */}
+        <section className="relative py-20 bg-gradient-to-r from-blue-900/80 to-teal-900/80 text-white overflow-hidden">
+          <div className="absolute inset-0">
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110"
+              style={{
+                backgroundImage: "url('/images/cta-bg.jpg')",
+                opacity: 0.15
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-teal-900/90"></div>
+          </div>
+          
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative z-10"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="inline-block px-6 py-2 mb-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+              >
+                <span className="text-sm font-medium text-white/90">Join Our Mission</span>
+              </motion.div>
+              <motion.h2 
+                className="text-4xl sm:text-5xl font-bold mb-6 leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Be Part of <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">Their Journey</span>
+              </motion.h2>
+              
+              <motion.p 
+                className="text-xl mb-10 text-gray-200 max-w-3xl mx-auto"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                Your support can help us provide essential care and resources to children in need. 
+                Together, we can create a brighter future for them.
+              </motion.p>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex flex-col sm:flex-row justify-center gap-4"
+              >
+                <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                  Donate Now
+                  <FaHeart className="text-sm" />
+                </button>
+                <button className="group relative px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20 flex items-center justify-center gap-2">
+                  Become a Volunteer
+                  <FaHandHoldingHeart className="text-teal-200 transition-transform group-hover:translate-x-1" />
+                </button>
+              </motion.div>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                className="mt-8 text-sm text-white/70"
+              >
+                Your contribution is tax-deductible. 100% of donations go directly to supporting children in need.
+              </motion.p>
+              </motion.div>
             </div>
-          </section>
-
-        </div>
+          </div>
+        </section>
 
         {/* Call to Action Section */}
         <section className="py-12 sm:py-16 bg-white">
@@ -251,26 +576,146 @@ export default function HomeBasedCarePage() {
                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
                   Support Our Home-Based Care Program
                 </h3>
-                <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-8 max-w-2xl mx-auto">
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                   Your support helps us reach more families in need, providing essential resources, medical care, and 
                   emotional support to children and their guardians. Together, we can make a difference in the lives of 
                   those who need it most.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button className="bg-primary-teal hover:bg-primary-cyan text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                  <button className="bg-gradient-to-r from-blue-500 to-teal-500 hover:opacity-90 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     Donate Now
                   </button>
-                  <button className="border-2 border-primary-teal text-primary-teal hover:bg-primary-teal hover:text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105">
+                  <button className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105">
                     Get Involved
                   </button>
                 </div>
               </div>
+              <div className="flex-1 p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 group-hover:border-blue-400/30 transition-colors">
+                <div className="flex items-center mb-4">
+                  <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500/20 to-teal-500/20 text-blue-300 mr-4">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">{step.title}</h3>
+                </div>
+                <p className="text-gray-300 pl-16">{step.description}</p>
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
-
+          </motion.div>
+        ))}
+      </div>
     </div>
-  )
-}
+  </div>
+</section>
 
+{/* CTA Section */}
+<section className="relative py-20 bg-gradient-to-r from-blue-900/80 to-teal-900/80 text-white overflow-hidden">
+  <div className="absolute inset-0">
+    <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-110"
+      style={{
+        backgroundImage: "url('/images/cta-bg.jpg')",
+        opacity: 0.15
+      }}
+    ></div>
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 to-teal-900/90"></div>
+  </div>
+  
+  <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+      className="relative z-10"
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="inline-block px-6 py-2 mb-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+      >
+        <span className="text-sm font-medium text-white/90">Join Our Mission</span>
+      </motion.div>
+      <motion.h2 
+        className="text-4xl sm:text-5xl font-bold mb-6 leading-tight"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+      >
+        Be Part of <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-teal-300">Their Journey</span>
+      </motion.h2>
+      
+      <motion.p 
+        className="text-xl mb-10 text-gray-200 max-w-3xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+        Your support can help us provide essential care and resources to children in need. 
+        Together, we can create a brighter future for them.
+      </motion.p>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="flex flex-col sm:flex-row justify-center gap-4"
+      >
+        <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-teal-500 text-white rounded-full font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+          Donate Now
+          <FaHeart className="text-sm" />
+        </button>
+        <button className="group relative px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20 flex items-center justify-center gap-2">
+          Become a Volunteer
+          <FaHandHoldingHeart className="text-teal-200 transition-transform group-hover:translate-x-1" />
+        </button>
+      </motion.div>
+      
+      <motion.p 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.6, duration: 0.6 }}
+        className="mt-8 text-sm text-white/70"
+      >
+        Your contribution is tax-deductible. 100% of donations go directly to supporting children in need.
+      </motion.p>
+    </motion.div>
+  </div>
+</section>
+
+{/* Call to Action Section */}
+<section className="py-12 sm:py-16 bg-white">
+  <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <div className="text-center animate-fade-in">
+      <div className="bg-gray-50 rounded-2xl p-8 sm:p-12 shadow-lg">
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+          Support Our Home-Based Care Program
+        </h3>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          Your support helps us reach more families in need, providing essential resources, medical care, and 
+          emotional support to children and their guardians. Together, we can make a difference in the lives of 
+          those who need it most.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <button className="bg-gradient-to-r from-blue-500 to-teal-500 hover:opacity-90 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+            Donate Now
+          </button>
+          <button className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105">
+        </div>
+      </section>
+    </main>
+  );
+};
+
+const HomeBasedCarePage = () => {
+  return (
+    /* ... rest of the code remains the same ... */
+  );
+};
+
+export default HomeBasedCarePage;
